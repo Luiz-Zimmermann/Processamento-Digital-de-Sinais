@@ -24,7 +24,9 @@ original_data = np.frombuffer(buffer, dtype = "int16")
 len_data = len(original_data)
 
 # Executa o filtro, aplicando um ganho de 0.5 ao áudio original
-final_data = original_data * (0.5 * np.ones_like(len_data))
+final_data = np.ones_like(original_data)
+for i in range(len_data):
+    final_data[i] = original_data[i] * gain
 
 # Calcula o tempo do áudio divindo o tamanho da amostra pela taxa de amostragem,
 # com passo de 1/taxa de amostragem, para ser utilizado no gráfico
@@ -62,11 +64,12 @@ matp.tight_layout()
 path = path.split(".")
 
 # Salva o áudio alterado
-'''
+
 with open(path[0]+"-after_filter."+path[1], "wb") as new_file:
-    np.save(new_file, final_data)
+    for data in final_data:
+        new_file.write(data)
     new_file.close()
-'''
+
 # Salva os gráficos
 matp.savefig(path[0]+"-Graficos.png", format="png")
 
